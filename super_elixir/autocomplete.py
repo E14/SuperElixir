@@ -3,6 +3,7 @@ import re
 import sublime
 import sublime_plugin
 
+from markdown import markdown
 from concurrent.futures import ThreadPoolExecutor
 from .utils import is_elixir, get_buffer_line_column
 from .sense_client import get_elixir_sense
@@ -111,18 +112,39 @@ class Autocomplete(sublime_plugin.EventListener):
                 types = docs['docs']['types']
                 types = ''.join(re.compile(r'`([^`]+)`').findall(types))
 
-                html = (
-                    '<div>' +
-                    types.replace('\n', '</div><div>') +
-                    docs['docs']['docs'].replace('<', '&lt;').replace('\n', '</div><div>') +
-                    '</div>'
-                )
+                # html = (
+                #     '<div>' +
+                #     types.replace('\n', '</div><div>') +
+                #     docs['docs']['docs'].replace('<', '&lt;').replace('\n', '</div><div>') +
+                #     '</div>'
+                # )
+                style = ("<style>"
+                    "html, body { margin: 0; padding: .5em; }"
+                    "code, pre  { white-space: pre; }"
+                    "pre        { display: block; white-space: nowrap; }"
+                    "p          { font-family: sans; margin: 1em 0; }"
+                    "blockquote { display: block; border-left: 3px solid #bbb;"
+                    "             margin: 0; padding: .25em 1em; color: #bbb;"
+                    "             font-style: italic; font-family: times;"
+                    "             background-color: rgba(0, 0, 0, 0.1); }"
+                    "def        { display: block; background-color: #2c2c31;"
+                    "             margin: 0 0 1em; padding: .5em 1em;"
+                    "             border-left: 3px solid #9768d1;"
+                    "             font-weight: bold; font-family: monospace; }"
+                    "</style>")
+
+                docs = re.sub(r'^> ([^\n]*)\n', r'<def>\1</def>', docs['docs']['docs'])
+                html = markdown(types + "\n" + docs, output_format='html5') + style
+                print(html)
 
                 if view.is_popup_visible():
                     view.update_popup(html)
 
             view.show_popup(
-                "<div>(loading)</div>",
+                """
+                <html><style>div {color: red;}</style>
+                <div>loading...</div></html>
+                """,
                 flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
                 location=point,
                 max_width=1024,
