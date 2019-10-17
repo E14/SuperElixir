@@ -10,7 +10,7 @@ from .settings import get_settings_param
 
 def find_mix_project(cwd=None):
     cwd = cwd or os.getcwd()
-    if cwd == os.path.realpath('/'):
+    if os.path.realpath(cwd) == os.path.realpath('/'):
         return None
     elif os.path.exists(os.path.join(cwd, 'mix.exs')):
         return cwd
