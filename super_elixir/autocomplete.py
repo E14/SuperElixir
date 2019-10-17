@@ -3,6 +3,7 @@ import re
 import sublime
 import sublime_plugin
 
+from concurrent.futures import ThreadPoolExecutor
 from .utils import is_elixir, get_buffer_line_column
 from .sense_client import get_elixir_sense
 
@@ -102,27 +103,33 @@ class Autocomplete(sublime_plugin.EventListener):
 
     def on_hover(self, view, point, hover_zone):
         if hover_zone == sublime.HOVER_TEXT and is_elixir(view):
+            def set_text(view, point, hover_zone):
+                buffer, line, column = get_buffer_line_column(view, point)
+                sense = get_elixir_sense(view)
+                docs = sense.docs(buffer, line, column)
 
-            buffer, line, column = get_buffer_line_column(view, point)
-            sense = get_elixir_sense(view)
-            docs = sense.docs(buffer, line, column)
+                types = docs['docs']['types']
+                types = ''.join(re.compile(r'`([^`]+)`').findall(types))
 
-            types = docs['docs']['types']
-            types = ''.join(re.compile(r'`([^`]+)`').findall(types))
+                html = (
+                    '<div>' +
+                    types.replace('\n', '</div><div>') +
+                    docs['docs']['docs'].replace('<', '&lt;').replace('\n', '</div><div>') +
+                    '</div>'
+                )
 
-            html = (
-                '<div>' +
-                types.replace('\n', '</div><div>') +
-                docs['docs']['docs'].replace('\n', '</div><div>') +
-                '</div>'
-            )
+                if view.is_popup_visible():
+                    view.update_popup(html)
 
             view.show_popup(
-                html,
+                "<div>(loading)</div>",
                 flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
                 location=point,
                 max_width=1024,
             )
+
+            ex = ThreadPoolExecutor(1)
+            ex.submit(set_text, view, point, hover_zone)
 
 
 class SuperElixirParamsAutocomplete(sublime_plugin.TextCommand):

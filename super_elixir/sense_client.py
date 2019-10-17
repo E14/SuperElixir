@@ -13,6 +13,15 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 ELIXIR_SENSE_EXEC = os.path.join(CURRENT_DIR, '../elixir_sense/run.exs')
 SOCKET_RE = re.compile(rb'ok:localhost:(?P<socket>.+)\n')
 
+# Notes
+#
+# ELIXIR_SENSE should be run in it's own path, and sent the project working dir
+# using `ElixirSense.Server.ContextLoader.set_context("dev", "PATH_PROJECT")` or
+# `"set_context", %{"env" => env, "cwd" => cwd}`
+#
+# ELIXIR_SENSE_PATH = os.path.join(CURRENT_DIR, '../elixir_sense')
+# ELIXIR_SENSE_EXEC = 'run.exs'
+
 
 ERLANG_ATOMS = {
     'nil': None,

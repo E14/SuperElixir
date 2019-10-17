@@ -19,6 +19,11 @@ This is a sublime plug-in that provide IDE like capabilities to sublime when wor
 
     cd ~/.config/sublime-text-3/Packages/
     git clone https://github.com/edelvalle/SuperElixir
+    cd SuperElixir
+    git submodule init
+    git submodule update
+    cp -f fixes/run.exs elixir_sense/run.exs
+
 
 ### with [Sublime Package Control](http://wbond.net/sublime_packages/package_control)
 
