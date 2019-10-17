@@ -112,7 +112,7 @@ Just put your mouse on top of the term and you want documentation about. If it i
 
 ## Special thanks
 
-- [Elixir Sense](https://github.com/msaraiva/elixir_sense): provides the Elixir introspection capabilities.
+- [Elixir Sense](https://github.com/elixir-lsp/elixir_sense): provides the Elixir introspection capabilities.
 - [PyErlang](https://github.com/okeuday/erlang_py): allows the plug-in to talk to Elixir Sense.
 - [Sublime Jedi](https://github.com/srusskih/SublimeJEDI): provides the Python to do the go to definition in Sublime.
 - [Elixir Linting](https://github.com/smanolloff/SublimeLinter-contrib-elixirc): provides most of the code for linting.
