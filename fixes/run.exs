@@ -16,17 +16,18 @@ requires = [
 
   "alchemist/helpers/module_info.ex",
   "alchemist/helpers/complete.ex",
-  
+
   "elixir_sense/providers/definition.ex",
   "elixir_sense/providers/docs.ex",
   "elixir_sense/providers/suggestion.ex",
   "elixir_sense/providers/signature.ex",
   "elixir_sense/providers/expand.ex",
   "elixir_sense/providers/eval.ex",
-  
+
   "elixir_sense/server/request_handler.ex",
   "elixir_sense/server/context_loader.ex",
   "elixir_sense/server/tcp_server.ex",
+
   "elixir_sense.ex",
   "elixir_sense/server.ex"
 ]
